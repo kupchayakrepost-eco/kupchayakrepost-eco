@@ -4,8 +4,58 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Купчая КрепостЪ — Проверка эковаучера</title>
-  <link rel="stylesheet" href="style.css" />
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url('background.jpg'); /* здесь путь к твоему фону */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      font-family: Arial, sans-serif;
+      color: #5a3e1b; /* тёмно-коричневый */
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+    }
+
+    #qr-reader {
+      width: 300px;
+      height: 300px;
+      border: 2px solid #b38b00;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: #5a3e1b;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    #qr-result {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #b38b00;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -13,12 +63,12 @@
   </header>
 
   <main>
-    <div id="qr-reader" style="width: 300px; margin: auto;"></div>
-    <div id="qr-result" style="margin-top: 20px; text-align: center;"></div>
+    <div id="qr-reader"></div>
+    <div id="qr-result"></div>
   </main>
 
   <footer>
-    <p>&copy; 2025 Купчая КрепостЪ</p>
+    <p>&copy; 2025 Купчая KрепостЪ</p>
   </footer>
 
   <script>
