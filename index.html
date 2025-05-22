@@ -18,10 +18,11 @@
     background: url('https://i.postimg.cc/4N852H12/Whats-App-2025-05-22-14-36-14-1e2eeb31.jpg') no-repeat center center fixed;
     background-size: cover;
     color: #3e2a14;
-    overflow: hidden;
+    overflow: hidden; /* запрет прокрутки */
+    display: flex;
+    flex-direction: column;
   }
   header, footer {
-    background: transparent;
     padding: 10px 20px;
     width: 100%;
     font-size: 20px;
@@ -29,8 +30,7 @@
     font-family: 'UnifrakturCook', Georgia, serif;
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
     text-align: center;
-    z-index: 10;
-    position: relative;
+    flex-shrink: 0;
   }
   h1 {
     margin: 0;
@@ -38,15 +38,13 @@
   }
   main {
     flex-grow: 1;
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
-    position: relative;
-    width: 100%;
-    margin-bottom: 10px;
-    min-height: calc(100vh - 120px);
   }
+  /* Овальная картинка */
   #oval {
     position: fixed;
     top: 50%;
@@ -59,42 +57,52 @@
     pointer-events: none;
     z-index: 1;
     opacity: 0.8;
-    /* Изначально без вращения */
     transform: translate(-50%, -50%) rotateY(0deg);
     backface-visibility: hidden;
   }
-  /* Анимация плавного вращения овала */
+  /* Класс запуска анимации вращения */
   #oval.exit {
     animation: openDoor 1.2s ease-in-out forwards;
   }
   @keyframes openDoor {
-    0% {
+    from {
       transform: translate(-50%, -50%) rotateY(0deg);
     }
-    100% {
+    to {
       transform: translate(-50%, -50%) rotateY(360deg);
     }
   }
+  /* Контейнер камеры и кнопки */
+  .scanner-container {
+    position: relative;
+    width: 180px;
+    margin-bottom: 20px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* Камера */
   #qr-reader {
     width: 180px;
     height: 180px;
     border: 2px solid #3e2a14;
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.6);
-    margin-bottom: 10px;
-    z-index: 5;
-    position: relative;
+    display: none; /* скрыта по умолчанию */
   }
+  /* Накладка на камеру */
   #cover-img {
     position: absolute;
-    width: 180px;
-    height: 180px;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 7;
+    width: 180px;
+    height: 180px;
     pointer-events: none;
+    z-index: 5;
   }
+  /* Кнопка сканирования */
   #scan-button {
     background-color: #2e1b0e;
     color: #f3e5c3;
@@ -104,23 +112,13 @@
     font-size: 18px;
     font-family: 'UnifrakturCook', Georgia, serif;
     cursor: pointer;
-    margin-bottom: 30px;
-    z-index: 10;
+    margin-top: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.4);
     transition: background-color 0.3s ease, color 0.3s ease;
-    position: relative;
   }
   #scan-button:hover {
     background-color: #3e2a14;
     color: #fff6e6;
-  }
-  .scanner-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-    z-index: 10;
   }
 </style>
 </head>
@@ -130,10 +128,12 @@
 </header>
 
 <main>
+  <!-- Большая овальная картинка -->
   <img id="oval" src="https://i.postimg.cc/QtNzy3rD/NLMzg6b.png" alt="Овал" />
-
+  
+  <!-- Контейнер с камерой, накладкой и кнопкой -->
   <div class="scanner-container">
-    <div id="qr-reader" style="display:none;"></div>
+    <div id="qr-reader"></div>
     <img id="cover-img" src="https://i.postimg.cc/yxKhRQdb/2025-05-22-14-17-14.png" alt="Закрывающая камера картинка" />
     <button id="scan-button">Сканировать QR</button>
   </div>
@@ -150,8 +150,8 @@
   const oval = document.getElementById("oval");
 
   scanButton.addEventListener("click", () => {
-    coverImg.style.display = "none"; // скрываем обложку камеры при старте
-    document.getElementById("qr-reader").style.display = "block";
+    coverImg.style.display = "none"; // скрываем накладку
+    document.getElementById("qr-reader").style.display = "block"; // показываем камеру
     Html5Qrcode.getCameras().then(devices => {
       if (devices && devices.length) {
         qrReader.start(
@@ -168,9 +168,9 @@
 
   function onScanSuccess(decodedText) {
     qrReader.stop().then(() => {
-      oval.classList.add("exit");  // запускаем вращение
+      oval.classList.add("exit"); // запускаем анимацию вращения
       setTimeout(() => {
-        window.location.href = "nextpage.html"; // переход после анимации
+        window.location.href = "nextpage.html"; // переход на следующую страницу
       }, 1200);
     });
   }
