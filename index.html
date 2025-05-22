@@ -9,79 +9,108 @@
     * {
       box-sizing: border-box;
     }
+
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       font-family: Georgia, serif;
-      background: url("background.jpg") no-repeat center center fixed;
+      background: url("https://i.postimg.cc/yxKhRQdb/2025-05-22-14-17-14.png") no-repeat center center fixed;
       background-size: cover;
       color: #3e2a14;
-      overflow-x: hidden;
     }
+
     body {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       align-items: center;
-      text-align: center;
-      min-height: 100vh;
+      justify-content: flex-start;
+      overflow: hidden;
     }
+
     header, footer {
       background: rgba(255, 255, 255, 0.6);
       width: 100%;
+      text-align: center;
       z-index: 10;
-      position: relative;
     }
-    header {
-      padding: 10px 20px;
-    }
+
     h1 {
-      margin: 0;
+      margin: 10px 0;
       font-size: 22px;
       color: #5e3a00;
     }
-    footer {
-      font-size: 13px;
-      padding: 10px;
-    }
+
     main {
+      position: relative;
       flex-grow: 1;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      position: relative;
+      justify-content: flex-end;
+      padding-bottom: 100px;
     }
 
-    #scan-container {
-      position: relative;
-      width: 200px;
-      height: 200px;
-      margin-top: 30px;
+    /* Овальная картинка */
+    #oval-background {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
     }
 
     #qr-reader {
       width: 160px;
       height: 160px;
-      border: 2px solid #5e3a00;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.3);
-      margin: 0 auto;
+      z-index: 3;
+      background: rgba(255, 255, 255, 0.2);
       position: relative;
-      z-index: 1;
     }
 
-    #overlay-image {
+    #mask-cover {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 200px;
-      height: 200px;
-      object-fit: contain;
-      pointer-events: none;
-      z-index: 2;
-      transition: transform 2s ease;
+      width: 160px;
+      height: 160px;
+      background: white;
+      border-radius: 10px;
+      z-index: 4;
+    }
+
+    #scan-area {
+      position: relative;
+      margin-bottom: 20px;
+      z-index: 5;
+    }
+
+    #start-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+      background-color: #5e3a00;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    #start-btn:hover {
+      background-color: #3e2a00;
+    }
+
+    #qr-result {
+      margin-top: 10px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 5px 10px;
+      border-radius: 6px;
+      color: #5e3a00;
+      z-index: 5;
     }
 
     .rotate-animation {
@@ -90,36 +119,17 @@
 
     @keyframes rotate360 {
       from {
-        transform: rotate(0deg);
+        transform: translateX(-50%) rotate(0deg);
       }
       to {
-        transform: rotate(360deg);
+        transform: translateX(-50%) rotate(360deg);
       }
     }
 
-    #qr-result {
-      margin-top: 12px;
-      font-size: 14px;
-      background: rgba(255, 255, 255, 0.6);
-      padding: 6px 10px;
-      border-radius: 6px;
-      color: #5e3a00;
-      min-height: 20px;
-    }
-
-    #start-scan-btn {
-      margin-top: 10px;
-      padding: 8px 16px;
-      font-size: 14px;
-      background-color: #5e3a00;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    #start-scan-btn:hover {
-      background-color: #4b2f00;
+    footer {
+      font-size: 13px;
+      padding: 10px;
+      z-index: 10;
     }
   </style>
 </head>
@@ -128,17 +138,16 @@
     <h1>Проверка эковаучера</h1>
   </header>
 
+  <!-- Овальная картинка позади -->
+  <img id="oval-background" src="https://i.postimg.cc/K4SSSgZT/Whats-App-2025-05-21-12-19-38-0d474d63.png" alt="Фон овальный" />
+
   <main>
-    <div id="scan-container">
+    <div id="scan-area">
       <div id="qr-reader"></div>
-      <!-- Ваша овальная маска -->
-      <img id="overlay-image" src="https://i.postimg.cc/K4SSSgZT/Whats-App-2025-05-21-12-19-38-0d474d63.png" alt="Овальная маска" />
+      <div id="mask-cover"></div>
     </div>
 
-    <!-- Кнопка запуска -->
-    <button id="start-scan-btn">Сканировать QR</button>
-
-    <!-- Результат -->
+    <button id="start-btn">Сканировать QR</button>
     <div id="qr-result">Ожидание сканирования...</div>
   </main>
 
@@ -148,43 +157,40 @@
 
   <script>
     const html5QrCode = new Html5Qrcode("qr-reader");
-    const startScanBtn = document.getElementById("start-scan-btn");
-    const qrResult = document.getElementById("qr-result");
-    const overlayImage = document.getElementById("overlay-image");
+    const startBtn = document.getElementById("start-btn");
+    const resultDiv = document.getElementById("qr-result");
+    const maskCover = document.getElementById("mask-cover");
+    const ovalImage = document.getElementById("oval-background");
 
     function onScanSuccess(decodedText, decodedResult) {
-      qrResult.innerText = "Эковаучер: " + decodedText;
-
+      resultDiv.innerText = "Эковаучер: " + decodedText;
       html5QrCode.stop().then(() => {
-        overlayImage.classList.add("rotate-animation");
-        overlayImage.addEventListener("animationend", () => {
-          window.location.href = "https://example.com/nextpage"; // Замени на нужную ссылку
+        ovalImage.classList.add("rotate-animation");
+        ovalImage.addEventListener("animationend", () => {
+          window.location.href = "https://example.com/nextpage"; // замените на свою ссылку
         }, { once: true });
-      }).catch(err => {
-        console.error("Ошибка остановки сканера:", err);
       });
     }
 
-    startScanBtn.addEventListener("click", () => {
+    startBtn.addEventListener("click", () => {
+      maskCover.style.display = "none";
+      startBtn.style.display = "none";
       Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
-          startScanBtn.style.display = "none";
-          qrResult.innerText = "Сканирование...";
           html5QrCode.start(
             { deviceId: { exact: devices[0].id } },
             {
               fps: 10,
               qrbox: { width: 140, height: 140 },
-              aspectRatio: 1.0,
-              facingMode: "environment"
+              aspectRatio: 1.0
             },
             onScanSuccess
           );
         } else {
-          qrResult.innerText = "Камера не найдена.";
+          resultDiv.innerText = "Камера не найдена.";
         }
       }).catch(err => {
-        qrResult.innerText = "Ошибка доступа к камере.";
+        resultDiv.innerText = "Ошибка доступа к камере.";
         console.error(err);
       });
     });
