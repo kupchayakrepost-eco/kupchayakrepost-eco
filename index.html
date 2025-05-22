@@ -15,17 +15,16 @@
       padding: 0;
       height: 100%;
       font-family: Georgia, serif;
-      background: url("https://i.postimg.cc/yxKhRQdb/2025-05-22-14-17-14.png") no-repeat center center fixed;
+      background: url("https://i.postimg.cc/4N852H12/Whats-App-2025-05-22-14-36-14-1e2eeb31.jpg") no-repeat center center fixed;
       background-size: cover;
       color: #3e2a14;
+      overflow: hidden;
     }
 
     body {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      overflow: hidden;
     }
 
     header, footer {
@@ -49,7 +48,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-end;
-      padding-bottom: 100px;
+      padding-bottom: 60px;
     }
 
     /* Овальная картинка */
@@ -58,8 +57,7 @@
       top: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: auto;
-      height: 100%;
+      height: 130%;
       z-index: 1;
       pointer-events: none;
     }
@@ -68,9 +66,8 @@
       width: 160px;
       height: 160px;
       border-radius: 10px;
-      z-index: 3;
+      z-index: 4;
       background: rgba(255, 255, 255, 0.2);
-      position: relative;
     }
 
     #mask-cover {
@@ -79,13 +76,14 @@
       height: 160px;
       background: white;
       border-radius: 10px;
-      z-index: 4;
+      z-index: 5;
     }
 
     #scan-area {
       position: relative;
+      margin-top: 100px;
       margin-bottom: 20px;
-      z-index: 5;
+      z-index: 4;
     }
 
     #start-btn {
@@ -96,7 +94,7 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      z-index: 5;
+      z-index: 4;
     }
 
     #start-btn:hover {
@@ -110,7 +108,7 @@
       padding: 5px 10px;
       border-radius: 6px;
       color: #5e3a00;
-      z-index: 5;
+      z-index: 4;
     }
 
     .rotate-animation {
@@ -138,8 +136,8 @@
     <h1>Проверка эковаучера</h1>
   </header>
 
-  <!-- Овальная картинка позади -->
-  <img id="oval-background" src="https://i.postimg.cc/K4SSSgZT/Whats-App-2025-05-21-12-19-38-0d474d63.png" alt="Фон овальный" />
+  <!-- Овальная картинка -->
+  <img id="oval-background" src="https://i.postimg.cc/K4SSSgZT/Whats-App-2025-05-21-12-19-38-0d474d63.png" alt="Овал" />
 
   <main>
     <div id="scan-area">
@@ -167,7 +165,7 @@
       html5QrCode.stop().then(() => {
         ovalImage.classList.add("rotate-animation");
         ovalImage.addEventListener("animationend", () => {
-          window.location.href = "https://example.com/nextpage"; // замените на свою ссылку
+          window.location.href = "https://example.com/next.html"; // замени на свою ссылку
         }, { once: true });
       });
     }
