@@ -28,7 +28,7 @@
     }
 
     header, footer {
-      background: rgba(255, 255, 255, 0.6);
+      background: transparent;
       width: 100%;
       text-align: center;
       z-index: 10;
@@ -48,16 +48,16 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-end;
-      padding-bottom: 60px;
+      padding-bottom: 100px;
     }
 
-    /* Овальная картинка */
     #oval-background {
       position: absolute;
       top: 0;
       left: 50%;
       transform: translateX(-50%);
-      height: 130%;
+      height: 100vh;
+      width: auto;
       z-index: 1;
       pointer-events: none;
     }
@@ -70,18 +70,19 @@
       background: rgba(255, 255, 255, 0.2);
     }
 
-    #mask-cover {
+    #cover-image {
       position: absolute;
       width: 160px;
       height: 160px;
-      background: white;
-      border-radius: 10px;
-      z-index: 5;
+      z-index: 6;
+      top: 0;
+      left: 0;
+      pointer-events: none;
     }
 
     #scan-area {
       position: relative;
-      margin-top: 100px;
+      margin-top: 20px;
       margin-bottom: 20px;
       z-index: 4;
     }
@@ -127,6 +128,7 @@
     footer {
       font-size: 13px;
       padding: 10px;
+      background: transparent;
       z-index: 10;
     }
   </style>
@@ -136,13 +138,14 @@
     <h1>Проверка эковаучера</h1>
   </header>
 
-  <!-- Овальная картинка -->
+  <!-- Овальная подложка -->
   <img id="oval-background" src="https://i.postimg.cc/K4SSSgZT/Whats-App-2025-05-21-12-19-38-0d474d63.png" alt="Овал" />
 
   <main>
     <div id="scan-area">
       <div id="qr-reader"></div>
-      <div id="mask-cover"></div>
+      <!-- Картинка-прикрытие камеры -->
+      <img id="cover-image" src="https://i.postimg.cc/yxKhRQdb/2025-05-22-14-17-14.png" alt="Закрывашка" />
     </div>
 
     <button id="start-btn">Сканировать QR</button>
@@ -157,7 +160,7 @@
     const html5QrCode = new Html5Qrcode("qr-reader");
     const startBtn = document.getElementById("start-btn");
     const resultDiv = document.getElementById("qr-result");
-    const maskCover = document.getElementById("mask-cover");
+    const coverImg = document.getElementById("cover-image");
     const ovalImage = document.getElementById("oval-background");
 
     function onScanSuccess(decodedText, decodedResult) {
@@ -165,14 +168,15 @@
       html5QrCode.stop().then(() => {
         ovalImage.classList.add("rotate-animation");
         ovalImage.addEventListener("animationend", () => {
-          window.location.href = "https://example.com/next.html"; // замени на свою ссылку
+          window.location.href = "https://example.com/next.html"; // Замени на нужную страницу
         }, { once: true });
       });
     }
 
     startBtn.addEventListener("click", () => {
-      maskCover.style.display = "none";
+      coverImg.style.display = "none";
       startBtn.style.display = "none";
+
       Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
           html5QrCode.start(
