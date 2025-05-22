@@ -5,19 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Купчая КрепостЪ — Проверка эковаучера</title>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
+      color: #2b1b0e; /* Глубокий тёмно-коричневый */
+      font-family: 'UnifrakturCook', cursive;
     }
 
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      font-family: Georgia, serif;
       background: url("https://i.postimg.cc/4N852H12/Whats-App-2025-05-22-14-36-14-1e2eeb31.jpg") no-repeat center center fixed;
       background-size: cover;
-      color: #3e2a14;
       overflow: hidden;
     }
 
@@ -25,6 +26,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: space-between;
     }
 
     header, footer {
@@ -36,8 +38,18 @@
 
     h1 {
       margin: 10px 0;
-      font-size: 22px;
-      color: #5e3a00;
+      font-size: 28px;
+      color: #2b1b0e;
+      letter-spacing: 1px;
+      text-shadow: 0 0 1px #000;
+    }
+
+    footer {
+      font-size: 14px;
+      padding: 10px;
+      background: transparent;
+      color: #2b1b0e;
+      z-index: 10;
     }
 
     main {
@@ -48,7 +60,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-end;
-      padding-bottom: 100px;
+      padding-bottom: 60px;
     }
 
     #oval-background {
@@ -62,11 +74,19 @@
       pointer-events: none;
     }
 
+    #scan-area {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
     #qr-reader {
       width: 160px;
       height: 160px;
       border-radius: 10px;
-      z-index: 4;
       background: rgba(255, 255, 255, 0.2);
     }
 
@@ -80,36 +100,21 @@
       pointer-events: none;
     }
 
-    #scan-area {
-      position: relative;
-      margin-top: 20px;
-      margin-bottom: 20px;
-      z-index: 4;
-    }
-
     #start-btn {
+      margin-top: 15px;
       padding: 10px 20px;
       font-size: 14px;
-      background-color: #5e3a00;
+      background-color: #2b1b0e;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      font-family: 'UnifrakturCook', cursive;
       z-index: 4;
     }
 
     #start-btn:hover {
-      background-color: #3e2a00;
-    }
-
-    #qr-result {
-      margin-top: 10px;
-      font-size: 14px;
-      background: rgba(255, 255, 255, 0.6);
-      padding: 5px 10px;
-      border-radius: 6px;
-      color: #5e3a00;
-      z-index: 4;
+      background-color: #1c1007;
     }
 
     .rotate-animation {
@@ -124,13 +129,6 @@
         transform: translateX(-50%) rotate(360deg);
       }
     }
-
-    footer {
-      font-size: 13px;
-      padding: 10px;
-      background: transparent;
-      z-index: 10;
-    }
   </style>
 </head>
 <body>
@@ -138,18 +136,15 @@
     <h1>Проверка эковаучера</h1>
   </header>
 
-  <!-- Овальная подложка -->
+  <!-- Овальная картинка -->
   <img id="oval-background" src="https://i.postimg.cc/K4SSSgZT/Whats-App-2025-05-21-12-19-38-0d474d63.png" alt="Овал" />
 
   <main>
     <div id="scan-area">
       <div id="qr-reader"></div>
-      <!-- Картинка-прикрытие камеры -->
       <img id="cover-image" src="https://i.postimg.cc/yxKhRQdb/2025-05-22-14-17-14.png" alt="Закрывашка" />
+      <button id="start-btn">Сканировать QR</button>
     </div>
-
-    <button id="start-btn">Сканировать QR</button>
-    <div id="qr-result">Ожидание сканирования...</div>
   </main>
 
   <footer>
@@ -159,16 +154,14 @@
   <script>
     const html5QrCode = new Html5Qrcode("qr-reader");
     const startBtn = document.getElementById("start-btn");
-    const resultDiv = document.getElementById("qr-result");
     const coverImg = document.getElementById("cover-image");
     const ovalImage = document.getElementById("oval-background");
 
     function onScanSuccess(decodedText, decodedResult) {
-      resultDiv.innerText = "Эковаучер: " + decodedText;
       html5QrCode.stop().then(() => {
         ovalImage.classList.add("rotate-animation");
         ovalImage.addEventListener("animationend", () => {
-          window.location.href = "https://example.com/next.html"; // Замени на нужную страницу
+          window.location.href = "https://example.com/next.html"; // замени на свою ссылку
         }, { once: true });
       });
     }
@@ -189,10 +182,10 @@
             onScanSuccess
           );
         } else {
-          resultDiv.innerText = "Камера не найдена.";
+          alert("Камера не найдена.");
         }
       }).catch(err => {
-        resultDiv.innerText = "Ошибка доступа к камере.";
+        alert("Ошибка доступа к камере.");
         console.error(err);
       });
     });
