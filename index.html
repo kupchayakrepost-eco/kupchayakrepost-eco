@@ -1,179 +1,164 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Купчая КрепостЪ — Проверка эковаучера</title>
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet" />
-<style>
-  * {
-    box-sizing: border-box;
-  }
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: 'UnifrakturCook', Georgia, serif;
-    background: url('https://i.postimg.cc/4N852H12/Whats-App-2025-05-22-14-36-14-1e2eeb31.jpg') no-repeat center center fixed;
-    background-size: cover;
-    color: #3e2a14;
-    overflow: hidden; /* запрет прокрутки */
-    display: flex;
-    flex-direction: column;
-  }
-  header, footer {
-    padding: 10px 20px;
-    width: 100%;
-    font-size: 20px;
-    color: #2e1b0e;
-    font-family: 'UnifrakturCook', Georgia, serif;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
-    text-align: center;
-    flex-shrink: 0;
-  }
-  h1 {
-    margin: 0;
-    font-size: 26px;
-  }
-  main {
-    flex-grow: 1;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-  }
-  /* Овальная картинка */
-  #oval {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 80vw;
-    height: 80vh;
-    transform-style: preserve-3d;
-    transform-origin: center center;
-    object-fit: contain;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.8;
-    transform: translate(-50%, -50%) rotateY(0deg);
-    backface-visibility: hidden;
-  }
-  /* Класс запуска анимации вращения */
-  #oval.exit {
-    animation: openDoor 1.2s ease-in-out forwards;
-  }
-  @keyframes openDoor {
-    from {
-      transform: translate(-50%, -50%) rotateY(0deg);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Купчая КрепостЪ — Проверка эковаучера</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
     }
-    to {
-      transform: translate(-50%, -50%) rotateY(360deg);
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'UnifrakturCook', Georgia, serif;
+      background: url('https://i.postimg.cc/4N852H12/Whats-App-2025-05-22-14-36-14-1e2eeb31.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #3e2a14;
+      overflow: hidden; /* убираем прокрутку */
     }
-  }
-  /* Контейнер камеры и кнопки */
-  .scanner-container {
-    position: relative;
-    width: 180px;
-    margin-bottom: 20px;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  /* Камера */
-  #qr-reader {
-    width: 180px;
-    height: 180px;
-    border: 2px solid #3e2a14;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.6);
-    display: none; /* скрыта по умолчанию */
-  }
-  /* Накладка на камеру */
-  #cover-img {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 180px;
-    height: 180px;
-    pointer-events: none;
-    z-index: 5;
-  }
-  /* Кнопка сканирования */
-  #scan-button {
-    background-color: #2e1b0e;
-    color: #f3e5c3;
-    border: 2px solid #3e2a14;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 18px;
-    font-family: 'UnifrakturCook', Georgia, serif;
-    cursor: pointer;
-    margin-top: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  #scan-button:hover {
-    background-color: #3e2a14;
-    color: #fff6e6;
-  }
-</style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      height: 100vh;
+    }
+    header, footer {
+      background: rgba(255 255 255 / 0); /* прозрачные */
+      padding: 10px 20px;
+      width: 100%;
+      font-size: 20px;
+      color: #2e1b0e;
+      font-family: 'UnifrakturCook', Georgia, serif;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+      text-align: center;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+    main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      position: relative;
+      width: 100%;
+      margin-bottom: 20px; /* немного пространства для кнопки */
+    }
+    #oval {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 100%;
+      max-width: none;
+      width: auto;
+      pointer-events: none;
+      z-index: 1;
+      object-fit: contain;
+      user-select: none;
+    }
+    #qr-reader {
+      width: 180px;
+      height: 180px;
+      border: 2px solid #3e2a14;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.6);
+      margin-bottom: 10px;
+      z-index: 5;
+      position: relative;
+    }
+    #cover-img {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 7;
+      pointer-events: none;
+      user-select: none;
+    }
+    #scan-button {
+      background-color: #2e1b0e;
+      color: #f5deb3;
+      border: 2px solid #3e2a14;
+      padding: 6px 40px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: 'UnifrakturCook', Georgia, serif;
+      cursor: pointer;
+      margin-bottom: -8px; /* опущена вниз к подвалу */
+      z-index: 15;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      position: relative;
+      width: 180px; /* ширина побольше, чтобы длина была такая же, но ширина меньше чем раньше */
+      max-width: 90vw;
+    }
+    #scan-button:hover {
+      background-color: #3e2a14;
+      color: #fff6e6;
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>Проверка эковаучера</h1>
-</header>
+  <header>
+    <h1>Проверка эковаучера</h1>
+  </header>
 
-<main>
-  <!-- Большая овальная картинка -->
-  <img id="oval" src="https://i.postimg.cc/QtNzy3rD/NLMzg6b.png" alt="Овал" />
-  
-  <!-- Контейнер с камерой, накладкой и кнопкой -->
-  <div class="scanner-container">
+  <main>
+    <img id="oval" src="https://i.postimg.cc/QtNzy3rD/NLMzg6b.png" alt="Овал" />
     <div id="qr-reader"></div>
     <img id="cover-img" src="https://i.postimg.cc/yxKhRQdb/2025-05-22-14-17-14.png" alt="Закрывающая камера картинка" />
     <button id="scan-button">Сканировать QR</button>
-  </div>
-</main>
+  </main>
 
-<footer>
-  &copy; 2025 Купчая КрепостЪ
-</footer>
+  <footer>
+    &copy; 2025 Купчая КрепостЪ
+  </footer>
 
-<script>
-  const qrReader = new Html5Qrcode("qr-reader");
-  const scanButton = document.getElementById("scan-button");
-  const coverImg = document.getElementById("cover-img");
-  const oval = document.getElementById("oval");
+  <script>
+    const qrReader = new Html5Qrcode("qr-reader");
+    const scanButton = document.getElementById("scan-button");
 
-  scanButton.addEventListener("click", () => {
-    coverImg.style.display = "none"; // скрываем накладку
-    document.getElementById("qr-reader").style.display = "block"; // показываем камеру
-    Html5Qrcode.getCameras().then(devices => {
-      if (devices && devices.length) {
-        qrReader.start(
-          { deviceId: { exact: devices[0].id } },
-          { fps: 10, qrbox: { width: 140, height: 140 } },
-          onScanSuccess
-        );
-      }
-    }).catch(err => {
-      alert("Ошибка доступа к камере");
-      console.error(err);
+    function onScanSuccess(decodedText) {
+      qrReader.stop().then(() => {
+        const oval = document.getElementById("oval");
+        oval.style.transition = "transform 1s ease";
+        oval.style.transform += " rotateY(360deg)";
+        setTimeout(() => {
+          window.location.href = "nextpage.html";
+        }, 1000);
+      });
+    }
+
+    scanButton.addEventListener("click", () => {
+      document.getElementById("qr-reader").style.display = "block";
+      Html5Qrcode.getCameras().then(devices => {
+        if (devices && devices.length) {
+          qrReader.start(
+            { deviceId: { exact: devices[0].id } },
+            { fps: 10, qrbox: { width: 140, height: 140 } },
+            onScanSuccess
+          );
+        }
+      }).catch(err => {
+        alert("Ошибка доступа к камере");
+        console.error(err);
+      });
     });
-  });
-
-  function onScanSuccess(decodedText) {
-    qrReader.stop().then(() => {
-      oval.classList.add("exit"); // запускаем анимацию вращения
-      setTimeout(() => {
-        window.location.href = "nextpage.html"; // переход на следующую страницу
-      }, 1200);
-    });
-  }
-</script>
+  </script>
 </body>
 </html>
