@@ -28,7 +28,7 @@
       height: 60px;
       line-height: 60px;
       background: transparent;
-      z-index: 20; /* выше овала */
+      z-index: 10;
       color: #2e1b0e;
       font-family: 'UnifrakturCook', Georgia, serif;
       text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
@@ -42,7 +42,7 @@
       height: 50px;
       line-height: 50px;
       background: transparent;
-      z-index: 10; /* выше овала */
+      z-index: 10;
       color: #2e1b0e;
       font-family: 'UnifrakturCook', Georgia, serif;
       text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
@@ -61,18 +61,17 @@
     }
     #oval {
       position: fixed;
-      top: 0;       /* верхний край к верху экрана */
-      bottom: 0;    /* нижний край к низу экрана */
+      top: 40px; /* поднята на 20px от 60 */
+      bottom: 50px;
       left: 50%;
       transform: translateX(-50%);
       max-width: none;
       width: auto;
       pointer-events: none;
-      z-index: 5;   /* ниже шапки и подвала */
+      z-index: 1;
       object-fit: contain;
       user-select: none;
-      /* убрал высоту, чтобы растянуть на всю высоту */
-      height: 100vh;
+      height: calc(100vh - 90px); /* подстроено под новый top и bottom */
     }
     #qr-reader {
       width: 180px;
@@ -96,10 +95,11 @@
       border: 2px solid #d8c27a; /* рамка песочно-желтая */
       border-radius: 10px;
       box-sizing: border-box;
+      background: transparent;
     }
     #camera-container {
       position: relative;
-      margin-bottom: 0;
+      margin-bottom: 0; /* без отступов между камерой и кнопкой */
     }
     #scan-button {
       width: 140px;
@@ -132,7 +132,7 @@
     <img id="oval" src="https://i.postimg.cc/QtNzy3rD/NLMzg6b.png" alt="Овал" />
     
     <div id="camera-container">
-      <div id="qr-reader"></div>
+      <div id="qr-reader" style="display:none;"></div>
       <img id="cover-img" src="https://i.postimg.cc/yxKhRQdb/2025-05-22-14-17-14.png" alt="Закрывающая камера картинка" />
     </div>
     <button id="scan-button">Сканировать QR</button>
@@ -145,31 +145,49 @@
   <script>
     const qrReader = new Html5Qrcode("qr-reader");
     const scanButton = document.getElementById("scan-button");
+    const coverImg = document.getElementById("cover-img");
+    const qrReaderDiv = document.getElementById("qr-reader");
 
     function onScanSuccess(decodedText) {
       qrReader.stop().then(() => {
         const oval = document.getElementById("oval");
         oval.style.transition = "transform 1s ease";
         oval.style.transform += " rotateY(360deg)";
+        coverImg.style.display = "block"; // Показать обложку обратно
         setTimeout(() => {
           window.location.href = "nextpage.html"; // сюда укажи ссылку следующей страницы
         }, 1000);
+      }).catch(err => {
+        console.error("Ошибка остановки сканера:", err);
+        coverImg.style.display = "block"; // показать обложку, если ошибка остановки
       });
     }
 
     scanButton.addEventListener("click", () => {
-      document.getElementById("qr-reader").style.display = "block";
+      qrReaderDiv.style.display = "block";
+      coverImg.style.display = "none"; // скрываем обложку при старте
+
       Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
           qrReader.start(
             { deviceId: { exact: devices[0].id } },
             { fps: 10, qrbox: { width: 140, height: 140 } },
             onScanSuccess
-          );
+          ).catch(err => {
+            alert("Ошибка при запуске сканера: " + err);
+            coverImg.style.display = "block"; // показать обложку при ошибке
+            qrReaderDiv.style.display = "none";
+          });
+        } else {
+          alert("Камеры не найдены");
+          coverImg.style.display = "block";
+          qrReaderDiv.style.display = "none";
         }
       }).catch(err => {
         alert("Ошибка доступа к камере");
         console.error(err);
+        coverImg.style.display = "block";
+        qrReaderDiv.style.display = "none";
       });
     });
   </script>
