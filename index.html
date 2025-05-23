@@ -61,7 +61,7 @@
     }
     #oval {
       position: fixed;
-      top: 55px; /* поднято на 5px */
+      top: 60px;
       bottom: 50px;
       left: 50%;
       transform: translateX(-50%);
@@ -71,7 +71,7 @@
       z-index: 1;
       object-fit: contain;
       user-select: none;
-      height: calc(100vh - 105px);
+      height: calc(100vh - 110px);
     }
     #qr-reader {
       width: 180px;
@@ -81,6 +81,7 @@
       background: rgba(255, 255, 255, 0.6);
       position: relative;
       z-index: 5;
+      display: none;
     }
     #cover-img {
       position: absolute;
@@ -92,6 +93,10 @@
       z-index: 7;
       pointer-events: none;
       user-select: none;
+      border: 2px solid #d8c27a;  /* Песочно-жёлтая рамка */
+      border-radius: 8px;
+      box-sizing: border-box;
+      display: block;
     }
     #camera-container {
       position: relative;
@@ -102,7 +107,7 @@
       height: 40px;
       background-color: #2e1b0e;
       color: #d8c27a;
-      border: 2px solid #3e2a14;
+      border: 2px solid #d8c27a;  /* рамка песочно-жёлтая, как у обложки */
       padding: 0;
       border-radius: 8px;
       font-size: 18px;
@@ -141,6 +146,8 @@
   <script>
     const qrReader = new Html5Qrcode("qr-reader");
     const scanButton = document.getElementById("scan-button");
+    const coverImg = document.getElementById("cover-img");
+    const qrReaderDiv = document.getElementById("qr-reader");
 
     function onScanSuccess(decodedText) {
       qrReader.stop().then(() => {
@@ -154,7 +161,8 @@
     }
 
     scanButton.addEventListener("click", () => {
-      document.getElementById("qr-reader").style.display = "block";
+      qrReaderDiv.style.display = "block";
+      coverImg.style.display = "none";  // скрываем обложку, чтобы камера была видна
       Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
           qrReader.start(
@@ -162,6 +170,8 @@
             { fps: 10, qrbox: { width: 140, height: 140 } },
             onScanSuccess
           );
+        } else {
+          alert("Камеры не найдены");
         }
       }).catch(err => {
         alert("Ошибка доступа к камере");
