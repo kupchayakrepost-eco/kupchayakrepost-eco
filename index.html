@@ -61,7 +61,7 @@
     }
     #oval {
       position: fixed;
-      top: 50px; /* поднято на 5px выше */
+      top: 55px; /* поднято на 5px */
       bottom: 50px;
       left: 50%;
       transform: translateX(-50%);
@@ -81,7 +81,6 @@
       background: rgba(255, 255, 255, 0.6);
       position: relative;
       z-index: 5;
-      display: none; /* скрываем по умолчанию */
     }
     #cover-img {
       position: absolute;
@@ -159,7 +158,7 @@
       Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
           qrReader.start(
-            devices[0].id,
+            { deviceId: { exact: devices[0].id } },
             { fps: 10, qrbox: { width: 140, height: 140 } },
             onScanSuccess
           );
