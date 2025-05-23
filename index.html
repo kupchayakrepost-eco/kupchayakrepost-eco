@@ -28,7 +28,7 @@
       height: 60px;
       line-height: 60px;
       background: transparent;
-      z-index: 10;
+      z-index: 20; /* выше овала */
       color: #2e1b0e;
       font-family: 'UnifrakturCook', Georgia, serif;
       text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
@@ -42,7 +42,7 @@
       height: 50px;
       line-height: 50px;
       background: transparent;
-      z-index: 10;
+      z-index: 10; /* выше овала */
       color: #2e1b0e;
       font-family: 'UnifrakturCook', Georgia, serif;
       text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
@@ -61,17 +61,18 @@
     }
     #oval {
       position: fixed;
-      top: 60px;
-      bottom: 50px;
+      top: 0;       /* верхний край к верху экрана */
+      bottom: 0;    /* нижний край к низу экрана */
       left: 50%;
       transform: translateX(-50%);
       max-width: none;
       width: auto;
       pointer-events: none;
-      z-index: 1;
+      z-index: 5;   /* ниже шапки и подвала */
       object-fit: contain;
       user-select: none;
-      height: calc(100vh - 110px);
+      /* убрал высоту, чтобы растянуть на всю высоту */
+      height: 100vh;
     }
     #qr-reader {
       width: 180px;
@@ -81,7 +82,6 @@
       background: rgba(255, 255, 255, 0.6);
       position: relative;
       z-index: 5;
-      display: none;
     }
     #cover-img {
       position: absolute;
@@ -93,21 +93,20 @@
       z-index: 7;
       pointer-events: none;
       user-select: none;
-      border: 2px solid #d8c27a;  /* Песочно-жёлтая рамка */
-      border-radius: 8px;
+      border: 2px solid #d8c27a; /* рамка песочно-желтая */
+      border-radius: 10px;
       box-sizing: border-box;
-      display: block;
     }
     #camera-container {
       position: relative;
-      margin-bottom: 8px;
+      margin-bottom: 0;
     }
     #scan-button {
       width: 140px;
       height: 40px;
       background-color: #2e1b0e;
       color: #d8c27a;
-      border: 2px solid #d8c27a;  /* рамка песочно-жёлтая, как у обложки */
+      border: 2px solid #d8c27a;
       padding: 0;
       border-radius: 8px;
       font-size: 18px;
@@ -146,8 +145,6 @@
   <script>
     const qrReader = new Html5Qrcode("qr-reader");
     const scanButton = document.getElementById("scan-button");
-    const coverImg = document.getElementById("cover-img");
-    const qrReaderDiv = document.getElementById("qr-reader");
 
     function onScanSuccess(decodedText) {
       qrReader.stop().then(() => {
@@ -161,8 +158,7 @@
     }
 
     scanButton.addEventListener("click", () => {
-      qrReaderDiv.style.display = "block";
-      coverImg.style.display = "none";  // скрываем обложку, чтобы камера была видна
+      document.getElementById("qr-reader").style.display = "block";
       Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
           qrReader.start(
@@ -170,8 +166,6 @@
             { fps: 10, qrbox: { width: 140, height: 140 } },
             onScanSuccess
           );
-        } else {
-          alert("Камеры не найдены");
         }
       }).catch(err => {
         alert("Ошибка доступа к камере");
