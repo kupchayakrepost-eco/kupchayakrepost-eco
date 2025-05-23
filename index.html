@@ -31,7 +31,8 @@
       z-index: 20;
       color: #2e1b0e;
       font-family: 'UnifrakturCook', Georgia, serif;
-      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+      font-size: 28px;
+      text-shadow: 1px 1px 2px rgba(216, 194, 122, 0.6);
       text-align: center;
     }
     footer {
@@ -45,7 +46,7 @@
       z-index: 10;
       color: #2e1b0e;
       font-family: 'UnifrakturCook', Georgia, serif;
-      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+      text-shadow: 1px 1px 2px rgba(216, 194, 122, 0.6);
       text-align: center;
     }
     main {
@@ -81,7 +82,6 @@
       background: rgba(255, 255, 255, 0.6);
       position: relative;
       z-index: 5;
-      visibility: hidden; /* скрыта по умолчанию */
     }
     #cover-img {
       position: absolute;
@@ -96,8 +96,6 @@
       border: 2px solid #d8c27a;
       border-radius: 10px;
       box-sizing: border-box;
-      opacity: 1;
-      transition: opacity 0.3s ease;
     }
     #camera-container {
       position: relative;
@@ -134,7 +132,7 @@
     <img id="oval" src="https://i.postimg.cc/QtNzy3rD/NLMzg6b.png" alt="Овал" />
     
     <div id="camera-container">
-      <div id="qr-reader"></div>
+      <div id="qr-reader" style="display: none;"></div>
       <img id="cover-img" src="https://i.postimg.cc/yxKhRQdb/2025-05-22-14-17-14.png" alt="Закрывающая камера картинка" />
     </div>
     <button id="scan-button">Сканировать QR</button>
@@ -147,16 +145,14 @@
   <script>
     const qrReader = new Html5Qrcode("qr-reader");
     const scanButton = document.getElementById("scan-button");
-    const qrReaderElem = document.getElementById("qr-reader");
     const coverImg = document.getElementById("cover-img");
 
     function onScanSuccess(decodedText) {
       qrReader.stop().then(() => {
+        coverImg.style.display = "block";
         const oval = document.getElementById("oval");
         oval.style.transition = "transform 1s ease";
         oval.style.transform += " rotateY(360deg)";
-        coverImg.style.opacity = 1;
-        qrReaderElem.style.visibility = "hidden";
         setTimeout(() => {
           window.location.href = "nextpage.html";
         }, 1000);
@@ -164,9 +160,8 @@
     }
 
     scanButton.addEventListener("click", () => {
-      qrReaderElem.style.visibility = "visible";
-      coverImg.style.opacity = 0;
-
+      document.getElementById("qr-reader").style.display = "block";
+      coverImg.style.display = "none";
       Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
           qrReader.start(
@@ -176,8 +171,7 @@
           );
         }
       }).catch(err => {
-        qrReaderElem.style.visibility = "hidden";
-        coverImg.style.opacity = 1;
+        coverImg.style.display = "block";
         console.error(err);
       });
     });
