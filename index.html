@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Купчая КрепостЪ — Проверка эковаучера</title>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet" />
@@ -13,62 +13,65 @@
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
+      height: 100vh;
       font-family: 'UnifrakturCook', Georgia, serif;
       background: url('https://i.postimg.cc/4N852H12/Whats-App-2025-05-22-14-36-14-1e2eeb31.jpg') no-repeat center center fixed;
       background-size: cover;
       color: #3e2a14;
       overflow: hidden;
     }
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
-      position: relative;
-      height: 100vh;
-    }
-    header, footer {
-      background: transparent;
-      padding: 10px 20px;
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      font-size: 20px;
+      height: 60px;
+      line-height: 60px;
+      background: transparent;
+      z-index: 10;
       color: #2e1b0e;
       font-family: 'UnifrakturCook', Georgia, serif;
       text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
       text-align: center;
-      z-index: 10;
-      position: relative;
     }
-    h1 {
-      margin: 0;
-      font-size: 26px;
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      background: transparent;
+      z-index: 10;
+      color: #2e1b0e;
+      font-family: 'UnifrakturCook', Georgia, serif;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+      text-align: center;
     }
     main {
-      flex-grow: 1;
+      position: relative;
+      height: 100vh;
+      padding-top: 60px;
+      padding-bottom: 50px;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
       align-items: center;
-      position: relative;
-      width: 100%;
-      margin-bottom: 10px;
-      height: calc(100vh - 120px);
+      justify-content: flex-end;
+      overflow: hidden;
     }
     #oval {
       position: fixed;
+      top: 55px; /* поднято на 5px */
+      bottom: 50px;
       left: 50%;
-      bottom: 0;
       transform: translateX(-50%);
-      width: auto;
       max-width: none;
-      height: auto;
-      max-height: none;
-      z-index: 1;
+      width: auto;
       pointer-events: none;
-      top: 15px; /* Отступ сверху */
-      bottom: 0;
+      z-index: 1;
+      object-fit: contain;
+      user-select: none;
+      height: calc(100vh - 105px);
     }
     #qr-reader {
       width: 180px;
@@ -76,39 +79,43 @@
       border: 2px solid #3e2a14;
       border-radius: 10px;
       background: rgba(255, 255, 255, 0.6);
-      margin-bottom: 10px;
-      z-index: 5;
       position: relative;
+      z-index: 5;
     }
     #cover-img {
       position: absolute;
-      width: 180px;
-      height: 180px;
       top: 0;
       left: 50%;
       transform: translateX(-50%);
+      width: 180px;
+      height: 180px;
       z-index: 7;
       pointer-events: none;
+      user-select: none;
+    }
+    #camera-container {
+      position: relative;
+      margin-bottom: 8px;
     }
     #scan-button {
+      width: 140px;
+      height: 40px;
       background-color: #2e1b0e;
-      color: #f3e5c3;
+      color: #d8c27a;
       border: 2px solid #3e2a14;
-      padding: 12px 24px;
+      padding: 0;
       border-radius: 8px;
       font-size: 18px;
       font-family: 'UnifrakturCook', Georgia, serif;
       cursor: pointer;
-      margin-bottom: 30px;
-      z-index: 10;
       box-shadow: 0 2px 5px rgba(0,0,0,0.4);
       transition: background-color 0.3s ease, color 0.3s ease;
       position: relative;
-      width: 180px;
+      z-index: 10;
     }
     #scan-button:hover {
-      background-color: #3e1a0e;
-      color: #dbc67a;
+      background-color: #3e2a14;
+      color: #fff6e6;
     }
   </style>
 </head>
@@ -119,8 +126,11 @@
 
   <main>
     <img id="oval" src="https://i.postimg.cc/QtNzy3rD/NLMzg6b.png" alt="Овал" />
-    <div id="qr-reader"></div>
-    <img id="cover-img" src="https://i.postimg.cc/yxKhRQdb/2025-05-22-14-17-14.png" alt="Закрывающая камера картинка" />
+    
+    <div id="camera-container">
+      <div id="qr-reader"></div>
+      <img id="cover-img" src="https://i.postimg.cc/yxKhRQdb/2025-05-22-14-17-14.png" alt="Закрывающая камера картинка" />
+    </div>
     <button id="scan-button">Сканировать QR</button>
   </main>
 
@@ -157,15 +167,6 @@
         alert("Ошибка доступа к камере");
         console.error(err);
       });
-    });
-
-    // Установка высоты овальной картинки, чтобы отступ сверху был и низ не сдвигался
-    window.addEventListener("load", () => {
-      const oval = document.getElementById("oval");
-      const bottomPos = window.innerHeight - oval.getBoundingClientRect().bottom;
-      // Высота = окно минус верхний отступ (15px) минус отступ снизу (bottomPos)
-      const newHeight = window.innerHeight - 15 - bottomPos;
-      oval.style.height = ${newHeight}px;
     });
   </script>
 </body>
